@@ -8,6 +8,7 @@ group = rootProject.maven_group
 
 dependencies {
 	runtimeOnly include(project(path: ":ThreeDShareware", configuration: "namedElements"))
+	runtimeOnly include(project(path: ":TwentyWFourteenInfinite", configuration: "namedElements"))
 }
 
 subprojects {
