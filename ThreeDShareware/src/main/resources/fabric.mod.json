@@ -1,25 +1,25 @@
 {
   "schemaVersion": 1,
-  "id": "aprilfools",
+  "id": "threedshareware",
   "version": "${version}",
 
-  "name": "April Fools",
+  "name": "3D Shareware",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
     "Zero_DSRS_VX"
   ],
 
   "license": "CC0-1.0",
-  "icon": "assets/aprilfools/icon.png",
+  "icon": "assets/threedshareware/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.zero.aprilfools.AprilFoolsMod"
+      "me.zero.threedshareware.ThreeDSharewareMod"
     ]
   },
   "mixins": [
-    "aprilfools.mixins.json"
+    "threedshareware.mixins.json"
   ],
 
   "depends": {
