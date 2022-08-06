@@ -6,7 +6,7 @@
   "name": "April Fools",
   "description": "This is an example description! Tell everyone what your mod is about!",
   "authors": [
-    "Zero_DSRS_VX"
+    "${authors}"
   ],
 
   "license": "CC0-1.0",
@@ -16,6 +16,9 @@
   "entrypoints": {
     "main": [
       "me.zero.aprilfools.AprilFoolsMod"
+    ],
+    "modmenu": [
+      "me.zero.aprilfools.config.ModMenuIntegration"
     ]
   },
   "mixins": [
