@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "item/3d"
+        "layer0": "threedshareware:item/3d"
     }
 }

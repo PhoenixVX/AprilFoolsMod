@@ -1,6 +1,6 @@
 {
     "parent": "item/generated",
     "textures": {
-        "layer0": "item/blue_key"
+        "layer0": "threedshareware:item/blue_key"
     }
 }
