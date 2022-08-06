@@ -7,7 +7,7 @@ archivesBaseName = rootProject.archives_base_name
 group = rootProject.maven_group
 
 dependencies {
-	include(project(path: ":ThreeDShareware", configuration: "namedElements"))
+	modRuntimeOnly include(project(path: ":ThreeDShareware", configuration: "namedElements"))
 }
 
 subprojects {
