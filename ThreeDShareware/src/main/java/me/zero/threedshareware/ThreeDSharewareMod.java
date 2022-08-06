@@ -2,6 +2,7 @@ package me.zero.threedshareware;
 
 import me.zero.threedshareware.registry.ModBlocks;
 import me.zero.threedshareware.registry.ModItems;
+import me.zero.threedshareware.registry.ModSounds;
 import net.fabricmc.api.ModInitializer;
 
 public class ThreeDSharewareMod implements ModInitializer {
@@ -11,5 +12,6 @@ public class ThreeDSharewareMod implements ModInitializer {
     public void onInitialize() {
         ModBlocks.initBlocks();
         ModItems.initItems();
+        ModSounds.initSoundEvents();
     }
 }
