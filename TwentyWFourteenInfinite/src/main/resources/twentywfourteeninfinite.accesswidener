@@ -1,0 +1,4 @@
+accessWidener	v1	named
+
+accessible   class   ClientboundBlockEntityDataPacket
+accessible   method  ClientboundBlockEntityDataPacket   <init>   (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/BlockEntityType;Lnet/minecraft/nbt/CompoundTag;)V
