@@ -40,12 +40,12 @@ public class ZoneBlock extends Block {
     }
 
     public void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
-        double double6 = (double)blockPos.getX() + 0.5D;
-        double double8 = (double)blockPos.getZ() + 0.5D;
+        double double6 = (double) blockPos.getX() + 0.5D;
+        double double8 = (double) blockPos.getZ() + 0.5D;
 
-        for(int integer10 = 0; integer10 < 3; ++integer10) {
+        for (int integer10 = 0; integer10 < 3; ++integer10) {
             if (randomSource.nextBoolean()) {
-                level.addParticle(ParticleTypes.COMPOSTER, double6 + (double)(randomSource.nextFloat() / 5.0F), (double)blockPos.getY() + (0.5D - (double)randomSource.nextFloat()), double8 + (double)(randomSource.nextFloat() / 5.0F), 0.0D, 0.0D, 0.0D);
+                level.addParticle(ParticleTypes.COMPOSTER, double6 + (double) (randomSource.nextFloat() / 5.0F), (double) blockPos.getY() + (0.5D - (double) randomSource.nextFloat()), double8 + (double) (randomSource.nextFloat() / 5.0F), 0.0D, 0.0D, 0.0D);
             }
         }
 
@@ -53,8 +53,8 @@ public class ZoneBlock extends Block {
 
     public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
         if (entity instanceof LivingEntity) {
-            ((LivingEntity)entity).addEffect(new MobEffectInstance(MobEffects.POISON, 60, 3, true, true));
-            ((LivingEntity)entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 1, true, true));
+            ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.POISON, 60, 3, true, true));
+            ((LivingEntity) entity).addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 1, true, true));
         }
 
         if (entity instanceof ItemEntity) {

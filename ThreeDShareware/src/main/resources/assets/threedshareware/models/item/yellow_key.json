@@ -1,6 +1,6 @@
 {
-    "parent": "item/generated",
-    "textures": {
-        "layer0": "threedshareware:item/yellow_key"
-    }
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "threedshareware:item/yellow_key"
+  }
 }

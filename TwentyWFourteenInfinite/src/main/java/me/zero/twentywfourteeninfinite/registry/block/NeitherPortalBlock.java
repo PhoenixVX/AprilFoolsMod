@@ -24,10 +24,10 @@ public class NeitherPortalBlock extends PortalBlock implements EntityBlock {
     protected ParticleOptions getParticleType(BlockState blockState, Level level, BlockPos blockPos) {
         BlockEntity cbt5 = level.getBlockEntity(blockPos);
         if (cbt5 instanceof NeitherPortalEntity) {
-            int integer6 = ((NeitherPortalEntity)cbt5).getDimension();
+            int integer6 = ((NeitherPortalEntity) cbt5).getDimension();
             Vec3 ddp7 = Vec3.fromRGB24(integer6);
-            double double8 = 1.0D + (double)(integer6 >> 16 & 255) / 255.0D;
-            return new DustParticleOptions(new Vector3f((float)ddp7.x, (float)ddp7.y, (float)ddp7.z), (float)double8);
+            double double8 = 1.0D + (double) (integer6 >> 16 & 255) / 255.0D;
+            return new DustParticleOptions(new Vector3f((float) ddp7.x, (float) ddp7.y, (float) ddp7.z), (float) double8);
         } else {
             return super.getParticleType(blockState, level, blockPos);
         }

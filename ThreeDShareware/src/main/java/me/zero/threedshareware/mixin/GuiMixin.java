@@ -13,7 +13,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -54,6 +53,9 @@ public abstract class GuiMixin extends GuiComponent {
     private ItemStack lastToolHighlight;
     @Shadow
     private int toolHighlightTimer;
+    @Shadow
+    @Final
+    private ItemRenderer itemRenderer;
 
     @Shadow
     protected abstract Player getCameraPlayer();
@@ -64,11 +66,11 @@ public abstract class GuiMixin extends GuiComponent {
     @Shadow
     public abstract Font getFont();
 
-    @Shadow @Final private ItemRenderer itemRenderer;
+    @Shadow
+    public abstract void tick(boolean bl);
 
-    @Shadow public abstract void tick(boolean bl);
-
-    @Shadow protected abstract void renderSlot(int i, int j, float f, Player player, ItemStack itemStack, int k);
+    @Shadow
+    protected abstract void renderSlot(int i, int j, float f, Player player, ItemStack itemStack, int k);
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
     private void renderHotbar(float tickDelta, PoseStack poseStack, CallbackInfo ci) {
@@ -226,7 +228,7 @@ public abstract class GuiMixin extends GuiComponent {
     }
 
     @Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
-    public void disableRenderExperienceBar (PoseStack poseStack, int i, CallbackInfo ci) {
+    public void disableRenderExperienceBar(PoseStack poseStack, int i, CallbackInfo ci) {
         if (AprilFoolsMod.CONFIG.threeDSharewareConfig.sharewareHudEnabled && !AprilFoolsMod.CONFIG.threeDSharewareConfig.xpBarEnabled) {
             ci.cancel();
         }

@@ -14,6 +14,7 @@ public interface InvokerBlocks {
     static Boolean invokeNever(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, EntityType<?> entityType) {
         throw new AssertionError();
     }
+
     @Invoker("always")
     static boolean invokeAlways(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
         throw new AssertionError();
