@@ -1,13 +1,14 @@
 package me.zero.threedshareware.registry.item;
 
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -16,21 +17,21 @@ import java.util.Random;
 public class ThreeDItem extends Item {
     private static final Random random = new Random();
 
-    public ThreeDItem (Settings settings) {
-        super(settings);
+    public ThreeDItem (Properties properties) {
+        super(properties);
     }
 
     @Override
-    public void appendTooltip (ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        Formatting randomFormat = Formatting.values()[random.nextInt(Formatting.values().length)];
-        tooltip.add(Text.literal("Tasty!").formatted(randomFormat));
+    public void appendHoverText (@NotNull ItemStack stack, @Nullable Level level, List<Component> tooltip, @NotNull TooltipFlag flag) {
+        ChatFormatting randomFormat = ChatFormatting.values()[random.nextInt(ChatFormatting.values().length)];
+        tooltip.add(Component.literal("Tasty!").withStyle(randomFormat));
     }
 
     @Override
-    public ItemStack finishUsing (ItemStack stack, World world, LivingEntity user) {
-        ItemStack resultStack = super.finishUsing(stack, world, user);
-        if (user instanceof ClientPlayerEntity) {
-            ClientPlayerEntity player = (ClientPlayerEntity) user;
+    public ItemStack finishUsingItem (@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity user) {
+        ItemStack resultStack = super.finishUsingItem(stack, level, user);
+        if (user instanceof LocalPlayer localPlayer) {
+            //ClientPlayerEntity player = (ClientPlayerEntity) user;
 
         }
 

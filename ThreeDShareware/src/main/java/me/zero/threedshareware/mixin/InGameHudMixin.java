@@ -1,199 +1,213 @@
 package me.zero.threedshareware.mixin;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import me.zero.aprilfools.AprilFoolsMod;
 import me.zero.threedshareware.ThreeDSharewareMod;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.option.AttackIndicator;
-import net.minecraft.client.render.DiffuseLighting;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.HungerManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tag.FluidTags;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
+import net.minecraft.client.AttackIndicatorStatus;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.food.FoodData;
+import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 
-@Mixin(InGameHud.class)
-public abstract class InGameHudMixin extends DrawableHelper {
+@Mixin(Gui.class)
+public abstract class InGameHudMixin extends GuiComponent {
+
+    private static final ResourceLocation HOT_BAR_TEXTURE = new ResourceLocation(ThreeDSharewareMod.MOD_ID, "textures/gui/hotbar.png");
+    @Shadow
+    @Final
+    private static ResourceLocation WIDGETS_LOCATION;
+    @Shadow
+    private int screenWidth;
+    @Shadow
+    private int screenHeight;
+    @Shadow
+    @Final
+    private Minecraft minecraft;
+    @Shadow
+    @Final
+    private RandomSource random;
+    @Shadow
+    private ItemStack lastToolHighlight;
+    @Shadow
+    private int toolHighlightTimer;
 
     @Shadow
-    protected abstract PlayerEntity getCameraPlayer ();
-    @Shadow private int scaledWidth;
-    @Shadow private int scaledHeight;
-    @Shadow @Final
-    private MinecraftClient client;
-    @Shadow @Final private static Identifier WIDGETS_TEXTURE;
-    @Shadow protected abstract void renderHotbarItem(int x, int y, float tickDelta, PlayerEntity player, ItemStack stack, int seed);
-    @Shadow @Final private Random random;
-    @Shadow public abstract int getTicks ();
-    @Shadow public abstract TextRenderer getTextRenderer();
+    protected abstract Player getCameraPlayer();
 
-    @Shadow private ItemStack currentStack;
-    @Shadow private int heldItemTooltipFade;
-    private static final Identifier HOT_BAR_TEXTURE = new Identifier(ThreeDSharewareMod.MOD_ID, "textures/gui/hotbar.png");
+    @Shadow
+    protected abstract void renderSlot(int x, int y, float tickDelta, Player player, ItemStack stack, int seed);
+
+    @Shadow
+    public abstract int getGuiTicks();
+
+    @Shadow
+    public abstract Font getFont();
 
     @Inject(method = "renderHotbar", at = @At("HEAD"), cancellable = true)
-    private void renderHotbar(float tickDelta, MatrixStack matrices, CallbackInfo ci) {
+    private void renderHotbar(float tickDelta, PoseStack poseStack, CallbackInfo ci) {
         if (AprilFoolsMod.CONFIG.threeDSharewareConfig.sharewareHudEnabled) {
             ci.cancel();
-            PlayerEntity playerEntity = this.getCameraPlayer();
-            if (playerEntity == null) {
+            Player player = this.getCameraPlayer();
+            if (player == null) {
                 return;
             }
 
-            int width = this.scaledWidth / 2;
+            int width = this.screenWidth / 2;
             int hotBarWidth = width - 128;
-            int height = this.scaledHeight - 64;
+            int height = this.screenHeight - 64;
             RenderSystem.clearColor(1.0f, 1.0f, 1.0f, 1.0f);
             RenderSystem.setShaderTexture(0, HOT_BAR_TEXTURE);
-            //this.client.getTextureManager().bindTexture(HOT_BAR_TEXTURE);
-            float offset = this.getZOffset();
-            this.setZOffset(-660);
-            this.drawTexture(matrices, hotBarWidth, height, 0, 64, 256, 64);
-            matrices.push();
-            matrices.translate(0.0f, 0.0f, -200.0f);
-            int time = (int)(Util.getMeasuringTimeMs() / 2000L % 4L);
+            //this.minecraft.getTextureManager().bindTexture(HOT_BAR_TEXTURE);
+            float offset = this.getBlitOffset();
+            this.setBlitOffset(-660);
+            this.blit(poseStack, hotBarWidth, height, 0, 64, 256, 64);
+            poseStack.pushPose();
+            poseStack.translate(0.0f, 0.0f, -200.0f);
+            int time = (int) (Util.getMillis() / 2000L % 4L);
             float[] ticks = new float[]{-20.0f, 0.0f, 20.0f, 0.0f};
-            if (this.client.getEntityRenderDispatcher().camera != null) {
-                InventoryScreen.drawEntity(hotBarWidth + 128, height + 135, 64, ticks[time], 0.0f, playerEntity);
+            if (this.minecraft.getEntityRenderDispatcher().camera != null) {
+                InventoryScreen.renderEntityInInventory(hotBarWidth + 128, height + 135, 64, ticks[time], 0.0f, player);
             }
-            matrices.pop();
+            poseStack.popPose();
             RenderSystem.clearColor(1.0f, 1.0f, 1.0f, 1.0f);
             RenderSystem.setShaderTexture(0, HOT_BAR_TEXTURE);
-            //this.client.getTextureManager().bindTexture(HOT_BAR_TEXTURE);
-            this.setZOffset(-90);
-            this.drawTexture(matrices, hotBarWidth, height, 0, 0, 256, 64);
-            RenderSystem.setShaderTexture(1, WIDGETS_TEXTURE);
-            //this.client.getTextureManager().bindTexture(WIDGETS_TEXTURE);
-            int slotX = playerEntity.getInventory().selectedSlot % 3;
-            int slotY = playerEntity.getInventory().selectedSlot / 3;
-            this.drawTexture(matrices,hotBarWidth + 194 + slotX * 20 - 1, height + 2 + slotY * 20 - 1, 0, 22, 24, 22);
-            this.setZOffset((int) offset);
+            //this.minecraft.getTextureManager().bindTexture(HOT_BAR_TEXTURE);
+            this.setBlitOffset(-90);
+            this.blit(poseStack, hotBarWidth, height, 0, 0, 256, 64);
+            RenderSystem.setShaderTexture(1, WIDGETS_LOCATION);
+            //this.minecraft.getTextureManager().bindTexture(WIDGETS_TEXTURE);
+            int slotX = player.getInventory().selected % 3;
+            int slotY = player.getInventory().selected / 3;
+            this.blit(poseStack, hotBarWidth + 194 + slotX * 20 - 1, height + 2 + slotY * 20 - 1, 0, 22, 24, 22);
+            this.setBlitOffset((int) offset);
             //RenderSystem.enableRescaleNormal();
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
-            DiffuseLighting.enableGuiDepthLighting(); // TODO: enableForItems()?
+            Lighting.setupForFlatItems(); // TODO: setupFor3DItems?
             for (int i = 0; i < 9; ++i) {
                 int var12 = hotBarWidth + 194 + i % 3 * 20 + 2;
                 int var13 = height + 2 + i / 3 * 20 + 2;
-                this.renderHotbarItem(var12, var13, tickDelta, playerEntity, playerEntity.getInventory().main.get(i), i);
+                this.renderSlot(var12, var13, tickDelta, player, player.getInventory().items.get(i), i);
             }
-            if (this.client.options.getAttackIndicator().getValue().equals(AttackIndicator.HOTBAR)) {
-                float var15 = this.client.player.getAttackCooldownProgress(0.0F);
+            if (this.minecraft.options.attackIndicator().get().equals(AttackIndicatorStatus.HOTBAR)) {
+                float var15 = this.minecraft.player.getAttackStrengthScale(0.0F);
                 if (var15 < 1.0F) {
                     int var12 = height + 2 + slotY * 20;
                     int var13 = hotBarWidth + 194 + slotX * 22;
-                    RenderSystem.setShaderTexture(2, DrawableHelper.GUI_ICONS_TEXTURE);
-                    //this.client.getTextureManager().bindTexture(DrawableHelper.GUI_ICONS_TEXTURE);
-                    int var14 = (int)(var15 * 19.0F);
+                    RenderSystem.setShaderTexture(2, GuiComponent.GUI_ICONS_LOCATION);
+                    //this.minecraft.getTextureManager().bindTexture(DrawableHelper.GUI_ICONS_TEXTURE);
+                    int var14 = (int) (var15 * 19.0F);
                     RenderSystem.clearColor(1.0F, 1.0F, 1.0F, 1.0F);
-                    this.drawTexture(matrices, var13, var12, 0, 94, 18, 18);
-                    this.drawTexture(matrices, var13, var12 + 18 - var14, 18, 112 - var14, 18, var14);
+                    this.blit(poseStack, var13, var12, 0, 94, 18, 18);
+                    this.blit(poseStack, var13, var12 + 18 - var14, 18, 112 - var14, 18, var14);
                 }
             }
 
-            DiffuseLighting.disableGuiDepthLighting();
+            Lighting.setupForFlatItems();
             //DiffuseLighting.disable();
             //RenderSystem.disableRescaleNormal();
             RenderSystem.disableBlend();
         }
     }
 
-    @Inject(method = "renderStatusBars", at = @At("HEAD"), cancellable = true)
-    private void renderStatusBars(MatrixStack matrices, CallbackInfo ci) {
+    @Inject(method = "renderPlayerHealth", at = @At("HEAD"), cancellable = true)
+    private void renderStatusBars(PoseStack poseStack, CallbackInfo ci) {
         if (AprilFoolsMod.CONFIG.threeDSharewareConfig.sharewareHudEnabled) {
             ci.cancel();
-            PlayerEntity player = this.getCameraPlayer();
+            Player player = this.getCameraPlayer();
             if (player != null) {
-                int health = MathHelper.ceil(player.getHealth());
-                this.random.setSeed(this.getTicks() * 312871L);
-                HungerManager var3 = player.getHungerManager();
+                int health = Mth.ceil(player.getHealth());
+                this.random.setSeed(this.getGuiTicks() * 312871L);
+                FoodData var3 = player.getFoodData();
                 int foodLevel = var3.getFoodLevel();
-                int width = this.scaledWidth / 2;
+                int width = this.screenWidth / 2;
                 int posX = width + 91;
-                int height = this.scaledHeight - 74;
-                int absorptionAmount = MathHelper.ceil(player.getAbsorptionAmount());
-                this.client.getProfiler().push("armor");
-                int armor = player.getArmor();
+                int height = this.screenHeight - 74;
+                int absorptionAmount = Mth.ceil(player.getAbsorptionAmount());
+                this.minecraft.getProfiler().push("armor");
+                int armor = player.getArmorValue();
                 String formattedArmorString = String.format("%02d%%", armor * 100 / 20);
-                int widthOfArmorString = this.getTextRenderer().getWidth(formattedArmorString);
+                int widthOfArmorString = this.getFont().width(formattedArmorString);
                 int var13 = width - 128;
-                int var14 = this.scaledHeight - 64;
-                this.getTextRenderer().draw(matrices, formattedArmorString, (float)(var13 + 25 + (23 - widthOfArmorString)), (float)(var14 + 41), -1);
-                this.client.getProfiler().swap("health");
+                int var14 = this.screenHeight - 64;
+                this.getFont().draw(poseStack, formattedArmorString, (float) (var13 + 25 + (23 - widthOfArmorString)), (float) (var14 + 41), -1);
+                this.minecraft.getProfiler().popPush("health");
                 float var15 = player.getMaxHealth();
-                String var16 = String.format("%02.0f%%", (float)(health + absorptionAmount) / var15 * 100.0F);
-                int var17 = this.getTextRenderer().getWidth(var16);
-                this.getTextRenderer().draw(matrices, var16, (float)(var13 + 25 + (23 - var17)), (float)(var14 + 8), absorptionAmount > 0 ? -256 : -65536);
+                String var16 = String.format("%02.0f%%", (float) (health + absorptionAmount) / var15 * 100.0F);
+                int var17 = this.getFont().width(var16);
+                this.getFont().draw(poseStack, var16, (float) (var13 + 25 + (23 - var17)), (float) (var14 + 8), absorptionAmount > 0 ? -256 : -65536);
                 RenderSystem.setShaderTexture(0, HOT_BAR_TEXTURE);
-                //this.client.getTextureManager().bindTexture(HOT_BAR_TEXTURE);
+                //this.minecraft.getTextureManager().bindTexture(HOT_BAR_TEXTURE);
                 int posY = height - 10;
-                this.client.getProfiler().swap("food");
+                this.minecraft.getProfiler().popPush("food");
                 int var19 = 32 * foodLevel / 20;
-                this.drawTexture(matrices, var13 + 161, var14 + 14, 0, 128, 32, var19);
+                this.blit(poseStack, var13 + 161, var14 + 14, 0, 128, 32, var19);
                 posY -= 10;
-                RenderSystem.setShaderTexture(1, DrawableHelper.GUI_ICONS_TEXTURE);
-                //this.client.getTextureManager().bindTexture(DrawableHelper.GUI_ICONS_TEXTURE);
-                this.client.getProfiler().swap("air");
-                int currentAir = player.getAir();
-                int maximumAir = player.getMaxAir();
-                if (player.isSubmergedIn(FluidTags.WATER) || currentAir < maximumAir) {
-                    int var23 = MathHelper.ceil((double)(currentAir - 2) * 10.0D / (double)maximumAir);
-                    int var24 = MathHelper.ceil((double)currentAir * 10.0D / (double)maximumAir) - var23;
+                RenderSystem.setShaderTexture(1, GuiComponent.GUI_ICONS_LOCATION);
+                //this.minecraft.getTextureManager().bindTexture(DrawableHelper.GUI_ICONS_TEXTURE);
+                this.minecraft.getProfiler().popPush("air");
+                int currentAir = player.getAirSupply();
+                int maximumAir = player.getMaxAirSupply();
+                if (player.isEyeInFluid(FluidTags.WATER) || currentAir < maximumAir) {
+                    int var23 = Mth.ceil((double) (currentAir - 2) * 10.0D / (double) maximumAir);
+                    int var24 = Mth.ceil((double) currentAir * 10.0D / (double) maximumAir) - var23;
 
-                    for(int var25 = 0; var25 < var23 + var24; ++var25) {
+                    for (int var25 = 0; var25 < var23 + var24; ++var25) {
                         if (var25 < var23) {
-                            this.drawTexture(matrices, posX - var25 * 8 - 9, posY + 15, 16, 18, 9, 9);
+                            this.blit(poseStack, posX - var25 * 8 - 9, posY + 15, 16, 18, 9, 9);
                         } else {
-                            this.drawTexture(matrices, posX - var25 * 8 - 9, posY + 15, 25, 18, 9, 9);
+                            this.blit(poseStack, posX - var25 * 8 - 9, posY + 15, 25, 18, 9, 9);
                         }
                     }
                 }
 
-                this.client.getProfiler().pop();
+                this.minecraft.getProfiler().pop();
             }
         }
     }
 
-    @Inject(method = "renderHeldItemTooltip", at = @At("HEAD"), cancellable = true)
-    public void renderHeldItemTooltip(MatrixStack matrices, CallbackInfo ci) {
+    @Inject(method = "renderSelectedItemName", at = @At("HEAD"), cancellable = true)
+    public void renderHeldItemTooltip(PoseStack poseStack, CallbackInfo ci) {
         if (AprilFoolsMod.CONFIG.threeDSharewareConfig.sharewareHudEnabled) {
             ci.cancel();
 
-            this.client.getProfiler().push("selectedItemName");
-            if (this.heldItemTooltipFade > 0 && !this.currentStack.isEmpty()) {
-                MutableText mutableText = Text.empty().append(this.currentStack.getName()).formatted(this.currentStack.getRarity().formatting);
-                if (this.currentStack.hasCustomName()) {
-                    mutableText.formatted(Formatting.ITALIC);
+            this.minecraft.getProfiler().push("selectedItemName");
+            if (this.toolHighlightTimer > 0 && !this.lastToolHighlight.isEmpty()) {
+                MutableComponent mutableText = Component.empty().append(this.lastToolHighlight.getHoverName()).withStyle(this.lastToolHighlight.getRarity().color);
+                if (this.lastToolHighlight.hasCustomHoverName()) {
+                    mutableText.withStyle(ChatFormatting.ITALIC);
                 }
 
-                int i = this.getTextRenderer().getWidth(mutableText);
-                int j = (this.scaledWidth - i) / 2;
-                int k = this.scaledHeight - 84;
-                if (!this.client.interactionManager.hasStatusBars()) {
+                int i = this.getFont().width(mutableText);
+                int j = (this.screenWidth - i) / 2;
+                int k = this.screenHeight - 84;
+
+                if (!this.minecraft.gameMode.canHurtPlayer()) {
                     k += 14;
                 }
 
-                int l = (int) ((float) this.heldItemTooltipFade * 256.0F / 10.0F);
+                int l = (int) (this.toolHighlightTimer * 256.0F / 10.0F);
                 if (l > 255) {
                     l = 255;
                 }
@@ -201,17 +215,17 @@ public abstract class InGameHudMixin extends DrawableHelper {
                 if (l > 0) {
                     RenderSystem.enableBlend();
                     RenderSystem.defaultBlendFunc();
-                    fill(matrices, j - 2, k - 2, j + i + 2, k + 9 + 2, this.client.options.getTextBackgroundColor(0));
-                    this.getTextRenderer().drawWithShadow(matrices, mutableText, j, k, 16777215 + (l << 24));
+                    fill(poseStack, j - 2, k - 2, j + i + 2, k + 9 + 2, this.minecraft.options.getBackgroundColor(0));
+                    this.getFont().draw(poseStack, mutableText, j, k, 16777215 + (l << 24));
                     RenderSystem.disableBlend();
                 }
             }
 
-            this.client.getProfiler().pop();
+            this.minecraft.getProfiler().pop();
         }
     }
 
-    @ModifyArg(
+    /*@ModifyArg(
             method = "renderExperienceBar",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/hud/InGameHud;drawTexture(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"),
             index = 2
@@ -227,5 +241,5 @@ public abstract class InGameHudMixin extends DrawableHelper {
     )
     private float modifyYPositionOfExperienceLevel(float original) {
         return AprilFoolsMod.CONFIG.threeDSharewareConfig.sharewareHudEnabled ? this.scaledHeight - 80.0F : original;
-    }
+    }*/
 }

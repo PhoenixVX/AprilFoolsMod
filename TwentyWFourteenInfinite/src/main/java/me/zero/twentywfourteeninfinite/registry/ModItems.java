@@ -1,11 +1,5 @@
 package me.zero.twentywfourteeninfinite.registry;
 
-import me.zero.aprilfools.api.registry.ItemRegistry;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.util.Identifier;
-
 public class ModItems {
 //    public static final Item RED_KEY = new Item(new FabricItemSettings().group(ItemGroup.MISC));
 //    public static final Item BLUE_KEY = new Item(new FabricItemSettings().group(ItemGroup.MISC));
