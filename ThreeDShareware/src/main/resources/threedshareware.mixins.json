@@ -7,7 +7,7 @@
   ],
   "client": [
     "CheatCodesMixin",
-    "InGameHudMixin"
+    "GuiMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,5 +1,8 @@
 {
   "text.autoconfig.aprilfools.title": "April Fools Configuration",
   "text.autoconfig.aprilfools.option.threeDSharewareConfig": "3D Shareware Config",
-  "text.autoconfig.aprilfools.option.threeDSharewareConfig.cheatCodesEnabled": "Cheat Codes Enabled?"
+  "text.autoconfig.aprilfools.option.twentyWFourteenInfinite": "20w14~ Config",
+  "text.autoconfig.aprilfools.option.threeDSharewareConfig.cheatCodesEnabled": "Cheat Codes Enabled?",
+  "text.autoconfig.aprilfools.option.threeDSharewareConfig.sharewareHudEnabled": "HUD Enabled?",
+  "text.autoconfig.aprilfools.option.threeDSharewareConfig.xpBarEnabled": "XP Bar Enabled?"
 }
