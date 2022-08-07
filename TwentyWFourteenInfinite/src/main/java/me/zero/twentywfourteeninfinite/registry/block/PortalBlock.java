@@ -18,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -97,7 +98,7 @@ public class PortalBlock extends Block {
             ItemStack itemStack = ((ItemEntity)entity).getItem();
             if (itemStack.getItem() == Items.WRITTEN_BOOK || itemStack.getItem() == Items.WRITABLE_BOOK) {
                 BookViewScreen.BookAccess bookAccess = BookViewScreen.BookAccess.fromItem(itemStack);
-                String string8 = (String) IntStream.range(0, bookAccess.getPageCount()).mapToObj(bookAccess::getPage).map(Component::toString).collect(Collectors.joining("\n"));
+                String string8 = (String) IntStream.range(0, bookAccess.getPageCount()).mapToObj(bookAccess::getPage).map(FormattedText::getString).collect(Collectors.joining("\n"));
                 if (!string8.isEmpty()) {
                     int integer9 = DimHash.getHash(string8);
                     this.floodFillReplace(level, blockPos, blockState, integer9);
