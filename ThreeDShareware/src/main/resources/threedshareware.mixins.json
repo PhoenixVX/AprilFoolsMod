@@ -6,6 +6,8 @@
   "mixins": [
   ],
   "client": [
+    "CheatCodesMixin",
+    "InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

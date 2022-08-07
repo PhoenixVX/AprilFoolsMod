@@ -10,7 +10,7 @@
   ],
 
   "license": "CC0-1.0",
-  "icon": "assets/threedshareware/icon.png",
+  "icon": "assets/threedshareware/textures/item/3d.png",
 
   "environment": "*",
   "entrypoints": {

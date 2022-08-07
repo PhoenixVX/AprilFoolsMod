@@ -8,9 +8,10 @@ import me.zero.aprilfools.AprilFoolsMod;
 @Config(name = AprilFoolsMod.MOD_ID)
 public class ModConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
-    ThreeDSharewareConfig threeDSharewareConfig = new ThreeDSharewareConfig();
+    public ThreeDSharewareConfig threeDSharewareConfig = new ThreeDSharewareConfig();
 
-    static class ThreeDSharewareConfig {
-        boolean cheatCodesEnabled = true;
+    public static class ThreeDSharewareConfig {
+        public boolean cheatCodesEnabled = false;
+        public boolean sharewareHudEnabled = false;
     }
 }
