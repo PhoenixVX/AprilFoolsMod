@@ -18,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
@@ -42,6 +43,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 
 
 public class PortalBlock extends Block {
@@ -92,12 +94,12 @@ public class PortalBlock extends Block {
         return !boolean10 && blockState1.getBlock() != this && !(new PortalBlock.PortalShape(levelAccessor, blockPos, axis1, this)).isComplete() ? Blocks.AIR.defaultBlockState() : super.updateShape(blockState, direction, blockState1, levelAccessor, blockPos, blockPos1);
     }
 
-    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
+    public void entityInside(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos, @NotNull Entity entity) {
         if (entity instanceof ItemEntity) {
             ItemStack itemStack = ((ItemEntity)entity).getItem();
             if (itemStack.getItem() == Items.WRITTEN_BOOK || itemStack.getItem() == Items.WRITABLE_BOOK) {
                 BookViewScreen.BookAccess bookAccess = BookViewScreen.BookAccess.fromItem(itemStack);
-                String string8 = (String) IntStream.range(0, bookAccess.getPageCount()).mapToObj(bookAccess::getPage).map(Component::toString).collect(Collectors.joining("\n"));
+                String string8 = IntStream.range(0, bookAccess.getPageCount()).mapToObj(bookAccess::getPage).map(FormattedText::toString).collect(Collectors.joining("\n"));
                 if (!string8.isEmpty()) {
                     int integer9 = DimHash.getHash(string8);
                     this.floodFillReplace(level, blockPos, blockState, integer9);

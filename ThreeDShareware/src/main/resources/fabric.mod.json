@@ -5,9 +5,6 @@
 
   "name": "3D Shareware",
   "description": "This is an example description! Tell everyone what your mod is about!",
-  "authors": [
-    "${authors}"
-  ],
 
   "license": "CC0-1.0",
   "icon": "assets/threedshareware/textures/item/3d.png",

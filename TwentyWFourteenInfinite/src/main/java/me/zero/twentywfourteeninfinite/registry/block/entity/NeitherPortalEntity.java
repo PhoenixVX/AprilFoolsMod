@@ -6,8 +6,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class NeitherPortalEntity extends BlockEntity {
     private int dimension;
@@ -27,14 +27,15 @@ public class NeitherPortalEntity extends BlockEntity {
         return compoundTag;
     }
 
-    public void load(CompoundTag compoundTag) {
+    public void load(@NotNull CompoundTag compoundTag) {
         super.load(compoundTag);
         this.dimension = compoundTag.getInt("Dimension");
     }
 
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 15, this.getUpdateTag());
+        //return new ClientboundBlockEntityDataPacket(this.worldPosition, this.getType(), this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this.getType().getBlockEntity(this.level, this.worldPosition), (compoundTag) -> this.getUpdateTag());
     }
 
     public CompoundTag getUpdateTag() {
