@@ -8,7 +8,8 @@
   "client": [
     "CheatCodesMixin",
     "GameRendererMixin",
-    "GuiMixin"
+    "GuiMixin",
+    "LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

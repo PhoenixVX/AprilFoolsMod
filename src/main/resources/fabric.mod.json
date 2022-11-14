@@ -15,10 +15,15 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.zero.aprilfools.AprilFoolsMod"
+      "me.zero.aprilfools.AprilFoolsMod",
+      "me.zero.threedshareware.ThreeDSharewareMod",
+      "me.zero.twentywfourteeninfinite.TwentyWFourteenInfiniteMod"
     ],
     "modmenu": [
       "me.zero.aprilfools.config.ModMenuIntegration"
+    ],
+    "client": [
+      "me.zero.threedshareware.ThreeDSharewareClientMod"
     ]
   },
   "mixins": [

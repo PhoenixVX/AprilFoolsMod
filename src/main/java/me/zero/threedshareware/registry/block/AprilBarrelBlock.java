@@ -119,6 +119,6 @@ public class AprilBarrelBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return null;
+        return new BarrelBlockEntity(pos, state);
     }
 }
