@@ -22,7 +22,9 @@
     ]
   },
   "mixins": [
-    "aprilfools.mixins.json"
+    "aprilfools.mixins.json",
+    "threedshareware.mixins.json",
+    "twentywfourteeninfinite.mixins.json"
   ],
 
   "depends": {
@@ -30,5 +32,6 @@
     "fabric-api": "*",
     "minecraft": "~1.19",
     "java": ">=17"
-  }
+  },
+  "accessWidener": "twentywfourteeninfinite.accesswidener"
 }

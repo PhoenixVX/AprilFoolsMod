@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import me.zero.aprilfools.AprilFoolsMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
@@ -58,7 +59,7 @@ public abstract class GameRendererMixin {
 
     @Inject(method = "render", at = @At("TAIL"))
     public void injectShaderProcess (float partialTicks, long nanoTime, boolean renderLevel, CallbackInfo ci) {
-        if (this.getMinecraft().getOverlay() == null) {
+        if (AprilFoolsMod.CONFIG != null && AprilFoolsMod.CONFIG.threeDSharewareConfig.sharewareShaderEnabled && this.getMinecraft().getOverlay() == null) {
             this.method_20281();
             if (this.field_19253 != null) {
                 PoseStack poseStack = RenderSystem.getModelViewStack();
@@ -76,11 +77,13 @@ public abstract class GameRendererMixin {
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "net/minecraft/util/Mth.lerp(FFF)F"))
-    public void injectMethod20280 (float partialTicks, long nanoTime, boolean renderLevel, CallbackInfo ci) {
-        this.method_20280();
+    public void injectDrawDirtBorder(float partialTicks, long nanoTime, boolean renderLevel, CallbackInfo ci) {
+        if (AprilFoolsMod.CONFIG != null && AprilFoolsMod.CONFIG.threeDSharewareConfig.sharewareShaderEnabled) {
+            this.drawDirtBorder();
+        }
     }
 
-    private void method_20280() {
+    private void drawDirtBorder() {
         GlStateManager._disableTexture();
         GlStateManager._enableDepthTest();
         GlStateManager._colorMask(false, false, false, false);

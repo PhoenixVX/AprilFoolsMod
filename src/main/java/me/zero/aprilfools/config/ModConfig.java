@@ -17,6 +17,7 @@ public class ModConfig implements ConfigData {
         public boolean cheatCodesEnabled = false;
         public boolean sharewareHudEnabled = false;
         public boolean xpBarEnabled = false;
+        public boolean sharewareShaderEnabled = false;
     }
 
     public static class TwentyWFourteenInfinite {
