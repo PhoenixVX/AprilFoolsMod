@@ -41,7 +41,7 @@ public class AprilBarrelBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+    public InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
         if (level.isClientSide) {
             return InteractionResult.PASS;
         }
@@ -54,7 +54,7 @@ public class AprilBarrelBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void onRemove (BlockState state, @NotNull Level level, @NotNull BlockPos pos, BlockState newState, boolean moved) {
+    public void onRemove(BlockState state, @NotNull Level level, @NotNull BlockPos pos, BlockState newState, boolean moved) {
         if (state.getBlock() == newState.getBlock()) {
             return;
         }
@@ -72,14 +72,14 @@ public class AprilBarrelBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void setPlacedBy (@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void setPlacedBy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (itemStack.hasCustomHoverName() && level.getBlockEntity(pos) instanceof BarrelBlockEntity barrelBlockEntity) {
             barrelBlockEntity.setCustomName(itemStack.getHoverName());
         }
     }
 
     @Override
-    public void entityInside (@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Entity entity) {
+    public void entityInside(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Entity entity) {
         if (!level.isClientSide && entity instanceof Projectile projectile) {
             Entity theEntity = projectile.getOwner();
             level.explode(theEntity, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, 5.0f, Explosion.BlockInteraction.DESTROY);
@@ -97,7 +97,7 @@ public class AprilBarrelBlock extends BaseEntityBlock {
     }
 
     @Override
-    public BlockState rotate (BlockState state, Rotation rotation) {
+    public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
@@ -108,7 +108,7 @@ public class AprilBarrelBlock extends BaseEntityBlock {
 
 
     @Override
-    protected void createBlockStateDefinition (StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, OPEN);
     }
 

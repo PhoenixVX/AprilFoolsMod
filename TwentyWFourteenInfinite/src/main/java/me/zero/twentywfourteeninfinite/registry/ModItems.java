@@ -11,9 +11,15 @@ import net.minecraft.world.item.Item;
 public class ModItems {
     public static final Item NETHERITE_STAIRS = new BlockItem(ModBlocks.NETHERITE_STAIRS, new FabricItemSettings().tab(CreativeModeTab.TAB_BUILDING_BLOCKS).fireResistant());
     public static final Item BOOK_BOX = new BlockItem(ModBlocks.BOOK_BLOCK, new FabricItemSettings().tab(CreativeModeTab.TAB_BUILDING_BLOCKS));
+    public static final Item FOOTPRINT = new Item(new FabricItemSettings());
+    public static final Item CURSOR = new BlockItem(ModBlocks.CURSOR, new FabricItemSettings().tab(CreativeModeTab.TAB_DECORATIONS));
+    public static final Item AN_ITEM = new Item(new FabricItemSettings());
 
     public static void initItems() {
         ItemRegistry.registerItem(new ResourceLocation(TwentyWFourteenInfiniteMod.MOD_ID, "netherite_stairs"), NETHERITE_STAIRS);
         ItemRegistry.registerItem(new ResourceLocation(TwentyWFourteenInfiniteMod.MOD_ID, "book_box"), BOOK_BOX);
+        ItemRegistry.registerItem(new ResourceLocation(TwentyWFourteenInfiniteMod.MOD_ID, "footprint"), FOOTPRINT);
+        ItemRegistry.registerItem(new ResourceLocation(TwentyWFourteenInfiniteMod.MOD_ID, "cursor"), CURSOR);
+        ItemRegistry.registerItem(new ResourceLocation(TwentyWFourteenInfiniteMod.MOD_ID, "fine_item"), AN_ITEM);
     }
 }

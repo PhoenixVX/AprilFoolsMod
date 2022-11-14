@@ -1,0 +1,72 @@
+{
+  "variants": {
+    "facing=east": [
+      {
+        "model": "twentywfourteeninfinite:block/book_box_a",
+        "y": 90
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_b",
+        "y": 90
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_c",
+        "y": 90
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_d",
+        "y": 90
+      }
+    ],
+    "facing=north": [
+      {
+        "model": "twentywfourteeninfinite:block/book_box_a"
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_b"
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_c"
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_d"
+      }
+    ],
+    "facing=south": [
+      {
+        "model": "twentywfourteeninfinite:block/book_box_a",
+        "y": 180
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_b",
+        "y": 180
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_c",
+        "y": 180
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_d",
+        "y": 180
+      }
+    ],
+    "facing=west": [
+      {
+        "model": "twentywfourteeninfinite:block/book_box_a",
+        "y": 270
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_b",
+        "y": 270
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_c",
+        "y": 270
+      },
+      {
+        "model": "twentywfourteeninfinite:block/book_box_d",
+        "y": 270
+      }
+    ]
+  }
+}

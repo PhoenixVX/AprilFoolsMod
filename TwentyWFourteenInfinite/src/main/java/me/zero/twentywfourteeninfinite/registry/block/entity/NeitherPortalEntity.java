@@ -34,8 +34,7 @@ public class NeitherPortalEntity extends BlockEntity {
 
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        //return new ClientboundBlockEntityDataPacket(this.worldPosition, this.getType(), this.getUpdateTag());
-        return ClientboundBlockEntityDataPacket.create(this.getType().getBlockEntity(this.level, this.worldPosition), (compoundTag) -> this.getUpdateTag());
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, ModBlockEntities.NEITHER, this.getUpdateTag());
     }
 
     public CompoundTag getUpdateTag() {

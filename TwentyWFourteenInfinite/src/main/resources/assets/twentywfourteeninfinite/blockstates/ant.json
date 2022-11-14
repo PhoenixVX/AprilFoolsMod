@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "twentywfourteeninfinite:block/ant",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "twentywfourteeninfinite:block/ant"
+    },
+    "facing=south": {
+      "model": "twentywfourteeninfinite:block/ant",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "twentywfourteeninfinite:block/ant",
+      "y": 270
+    }
+  }
+}

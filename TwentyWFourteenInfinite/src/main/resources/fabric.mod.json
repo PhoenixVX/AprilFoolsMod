@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "id": "twentywfourteeninfinite",
   "version": "${version}",
-
   "name": "20w14~",
   "description": "This is an example description! Tell everyone what your mod is about!",
-
+  "authors": [
+    "${authors}"
+  ],
   "license": "CC0-1.0",
   "icon": "assets/twentywfourteeninfinite/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -18,12 +18,11 @@
   "mixins": [
     "twentywfourteeninfinite.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.14.6",
     "fabric-api": "*",
     "minecraft": "~1.19",
     "java": ">=17"
   },
-  "accessWidener" : "twentywfourteeninfinite.accesswidener"
+  "accessWidener": "twentywfourteeninfinite.accesswidener"
 }

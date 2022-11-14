@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "twentywfourteeninfinite:block/neither_portal_ns"
+    },
+    "axis=z": {
+      "model": "twentywfourteeninfinite:block/neither_portal_ew"
+    }
+  }
+}
